@@ -28,10 +28,14 @@ const App = () => {
   const playerXRef = useRef(playerX);
   const caughtItemsRef = useRef(new Set());
   const lastItemTimeRef = useRef(0);
-  const minItemInterval = 1000;
+  const initialMinItemInterval = 2000;
+  const [minItemInterval, setMinItemInterval] = useState(initialMinItemInterval);  // Zmienna do przechowywania interwału
+
 
   const starThresholds = useRef([10, 25, 50]).current;
   const pointXThresholds = useRef([1, 2, 3]).current;
+
+  const [fallingSpeed, setFallingSpeed] = useState(5);
 
 
   useEffect(() => {
@@ -69,7 +73,7 @@ const App = () => {
         const updatedItems = items
         .map((item) => ({
           ...item,
-          y: item.y + 5,
+          y: item.y + fallingSpeed,
         }));
 
         updatedItems.forEach((item) => {
@@ -101,7 +105,7 @@ const App = () => {
 
       return updatedItems.filter((item) => item.y < window.innerHeight && !caughtItemsRef.current.has(item.id));
     });
-  }, [isPaused]);
+  }, [isPaused, fallingSpeed]);
 
   useEffect(() => {
     const handleKeyDown = (event) => {
@@ -123,6 +127,10 @@ const App = () => {
     const gameLoop = () => {
       if (isPaused) return;
       moveItems();
+
+      setFallingSpeed((prevSpeed)=> Math.min(prevSpeed + 0.01, 15));
+
+      setMinItemInterval((prevInterval) => Math.max(prevInterval - 3, 300)); 
 
       const now = Date.now();
       if (now - lastItemTimeRef.current >= minItemInterval) {
@@ -165,6 +173,7 @@ const App = () => {
     setGameOver(false);
     caughtItemsRef.current.clear();
     lastItemTimeRef.current = 0;
+    setFallingSpeed(5);
   }
 
   return (
@@ -230,23 +239,23 @@ const App = () => {
       {gameOver && (
         <div classname="game-over-container">
           <div className="game-over">
-            <h1>Game Over!</h1>
-            <p>You have caught 3 red items!</p>
-            <h2 onClick={restartGame}>RESTART</h2>
+            <h1>KONIEC GRY</h1>
+            <h2 onClick={restartGame}>ZAGRAJ PONOWNIE</h2>
+            <h3 onClick={() => window.location.href = "http://localhost:3000"}>POWRÓT</h3>
           </div>
         </div>
       )}
 
       {isPaused && (
           <div className="stop">
-            <h1>STOP</h1>
-            <p>Press ESC to play!</p>
+            <h1>PAUZA</h1>
+            <p>Nacisnij ESC by wznowić grę!</p>
           </div>
       )}
 
       {!isPaused && (
           <div className="info">
-            <p>Press ESC to pause!</p>
+            <p>Naciśnij ESC zatrzymać grę!</p>
           </div>
       )}
     </div>

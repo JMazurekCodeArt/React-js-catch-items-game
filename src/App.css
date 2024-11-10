@@ -132,8 +132,9 @@
 }
 
 .game-over h1 {
-  font-size: 72px;
+  font-size: 100px;
   margin-top: 90px;
+  color:rgb(255, 25, 25);
 }
 
 .game-over p {
@@ -142,13 +143,23 @@
 }
 
 .game-over h2 {
-  font-size: 32px;
+  font-size: 54px;
 }
 
 .game-over h2:hover {
-  color: rgb(118, 154, 185);
+  color: rgb(37, 106, 180);
   cursor: pointer;
 }
+
+.game-over h3 {
+  font-size: 32px;
+}
+
+.game-over h3:hover {
+  color: rgb(37, 106, 180);
+  cursor: pointer;
+}
+
 
 .stop {
   position: absolute;
